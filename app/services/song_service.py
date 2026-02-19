@@ -1,8 +1,6 @@
-from app.database import MongoDB
-from app.services.embedding_service import generate_embedding
-from app.database.vector_db import qdrant
 from app.core.config import settings
-from bson import ObjectId
+from app.database.vector_db import qdrant
+from app.services.embedding_service import generate_embedding
 
 
 async def create_song(song_data):
@@ -22,10 +20,7 @@ async def create_song(song_data):
             {
                 "id": song_id,
                 "vector": embedding,
-                "payload": {
-                    "genre": song_data.genre,
-                    "artist": song_data.artist
-                },
+                "payload": {"genre": song_data.genre, "artist": song_data.artist},
             }
         ],
     )

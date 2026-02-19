@@ -1,11 +1,13 @@
+
 from pydantic import BaseModel
-from typing import List, Optional
+
 
 class SongCreate(BaseModel):
     title: str
     artist: str
     genre: str
-    lyrics: Optional[str] = None
+    lyrics: str | None = None
+
 
 class SongResponse(BaseModel):
     id: str
@@ -13,5 +15,6 @@ class SongResponse(BaseModel):
     artist: str
     genre: str
 
+
 class RecommendationResponse(BaseModel):
-    recommendations: List[SongResponse]
+    recommendations: list[SongResponse]

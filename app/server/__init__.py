@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api import auth_router, user_router, song_router
+from app.api import auth_router, song_router, user_router
 
 app = FastAPI(title="Songs", docs_url="/")
 

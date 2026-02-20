@@ -1,8 +1,7 @@
-from fastapi import APIRouter
-
+from fastapi import APIRouter, UploadFile, File, Path
 from app.models.song_model import Songs
 from app.schemas.song_schema import SongCreate
-from app.services.recommendation_service import get_recommendations
+from typing import Annotated
 
 song_router = APIRouter(tags=["song"], prefix="/api/song")
 
@@ -14,7 +13,12 @@ async def add_song(payload: SongCreate):
     return response
 
 
-@song_router.get(path="/recommendations")
-async def get_songs(song_id: str):
-    songs = await get_recommendations(song_id)
+@song_router.get(path="/recommendations/{song_id}")
+async def get_songs(song_id: Annotated[str, Path()]):
+    songs = await Songs().get_recommendations(song_id)
     return songs
+
+
+@song_router.post(path="/from_csv")
+async def add_song_from_csv(file: UploadFile = File(...)):
+    return await Songs().populate_db_from_csv(file)

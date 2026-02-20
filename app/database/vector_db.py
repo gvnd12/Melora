@@ -10,7 +10,7 @@ def create_qdrant_collection():
 
     collection = settings.QDRANT_SONGS_COLLECTION
 
-    is_collection_exists = qdrant.get_collection(collection_name=collection)
+    is_collection_exists = qdrant.collection_exists(collection_name=collection)
 
     if is_collection_exists:
         return

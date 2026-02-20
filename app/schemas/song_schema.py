@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel
 
 
@@ -7,6 +6,7 @@ class SongCreate(BaseModel):
     artist: str
     genre: str
     lyrics: str | None = None
+    source: str | None = None
 
 
 class SongResponse(BaseModel):

@@ -1,12 +1,13 @@
+import csv
+import io
+import uuid
+
+from fastapi import UploadFile
+
 from app.core.config import settings
 from app.database import MongoDB
 from app.database.vector_db import qdrant
-from app.services.embedding_service import generate_song_embeddings, model
-import uuid
-import csv
-import io
-from fastapi import UploadFile
-
+from app.services.embedding_service import generate_song_embeddings
 from app.tools.utils import generate_uuid
 
 BATCH_SIZE = 100

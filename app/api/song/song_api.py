@@ -1,7 +1,9 @@
-from fastapi import APIRouter, UploadFile, File, Path
+from typing import Annotated
+
+from fastapi import APIRouter, File, Path, UploadFile
+
 from app.models.song_model import Songs
 from app.schemas.song_schema import SongCreate
-from typing import Annotated
 
 song_router = APIRouter(tags=["song"], prefix="/api/song")
 

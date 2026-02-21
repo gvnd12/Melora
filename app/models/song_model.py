@@ -1,5 +1,6 @@
 import csv
 import io
+import sys
 import uuid
 
 from fastapi import UploadFile
@@ -10,6 +11,7 @@ from app.database.vector_db import qdrant
 from app.services.embedding_service import generate_song_embeddings
 from app.tools.utils import generate_uuid
 
+csv.field_size_limit(sys.maxsize)
 BATCH_SIZE = 100
 QDRANT_BATCH_SIZE = 500
 
@@ -64,28 +66,35 @@ class Songs(MongoDB):
         results = self.qdrant.query_points(
             collection_name=settings.QDRANT_SONGS_COLLECTION,
             query=vector,
-            limit=5,
+            limit=20,
         )
 
         recommendations = []
         for result in results.points:
+            if len(recommendations) >= 5:
+                break
+
             id_hex = str(uuid.UUID(result.id).hex)
 
             if id_hex == song_id:
                 continue
             record = await self.read_entry(filter_domain={"_id": id_hex})
-            song_list = record["data"]
-            song = song_list[0]
-            if song:
-                recommendations.append(
-                    {
-                        "id": str(song.get("_id")),
-                        "artist": str(song.get("artist")),
-                        "genre": str(song.get("genre")),
-                        "title": str(song.get("title")),
-                        "source": str(song.get("source")),
-                    }
-                )
+            if not record or not record.get("data"):
+                continue
+            song = record["data"][0]
+
+            if not song.get("source"):
+                continue
+
+            recommendations.append(
+                {
+                    "id": str(song.get("_id")),
+                    "artist": str(song.get("artist")),
+                    "genre": str(song.get("genre")),
+                    "title": str(song.get("title")),
+                    "source": str(song.get("source")),
+                }
+            )
 
         return recommendations
 
